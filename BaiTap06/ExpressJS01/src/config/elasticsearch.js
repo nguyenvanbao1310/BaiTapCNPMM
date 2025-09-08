@@ -1,10 +1,10 @@
-// config/elasticsearch.js
 const { Client } = require("@elastic/elasticsearch");
+require("dotenv").config();
 
 const client = new Client({
-  node: "https://my-elasticsearch-project-e775ed.es.us-central1.gcp.elastic.cloud:443",
+  node: process.env.ES_NODE,
   auth: {
-    apiKey: "TmV3ZEo1a0I2dmQyU2FoNUN0bXU6aGNycnJfbzQzYlZ0eWRDMWc2dUNwdw==",
+    apiKey: process.env.ES_API_KEY,
   },
 });
 
