@@ -2,6 +2,8 @@ const {
   createUserService,
   loginService,
   getUserService,
+  forgotPasswordService,
+  resetPasswordService,
 } = require("../services/userService");
 
 const createUser = async (req, res) => {
@@ -25,9 +27,23 @@ const getAccount = async (req, res) => {
   return res.status(200).json(req.user);
 };
 
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  const data = await forgotPasswordService(email);
+  return res.status(200).json(data);
+};
+
+const resetPassword = async (req, res) => {
+  const { token, newPassword } = req.body;
+  const data = await resetPasswordService(token, newPassword);
+  return res.status(200).json(data);
+};
+
 module.exports = {
   createUser,
   handleLogin,
   getUser,
   getAccount,
+  forgotPassword,
+  resetPassword,
 };

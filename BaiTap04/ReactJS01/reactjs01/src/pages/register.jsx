@@ -11,16 +11,16 @@ const RegisterPage = () => {
     const { name, email, password } = values;
     const res = await createUserApi(name, email, password);
 
-    if (res) {
+    if (res && res.EC === 0) {
       notification.success({
         message: "CREATE USER",
-        description: "Success",
+        description: "Đăng ký thành công",
       });
       navigate("/login");
     } else {
       notification.error({
         message: "CREATE USER",
-        description: "error",
+        description: res?.EM || "Có lỗi xảy ra",
       });
     }
   };
@@ -83,11 +83,17 @@ const RegisterPage = () => {
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" block>
                 Submit
               </Button>
             </Form.Item>
+
+            {/* Forgot Password */}
+            <div style={{ textAlign: "right", marginBottom: "10px" }}>
+              <Link to={"/forgot-password"}>Quên mật khẩu?</Link>
+            </div>
           </Form>
+
           <Link to={"/"}>
             <ArrowLeftOutlined /> Quay lại trang chủ
           </Link>
