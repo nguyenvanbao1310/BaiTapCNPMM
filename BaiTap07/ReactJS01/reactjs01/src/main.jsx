@@ -10,8 +10,8 @@ import HomePage from "./pages/home.jsx";
 import LoginPage from "./pages/login.jsx";
 import ProductList from "./pages/productList.jsx";
 import { AuthWrapper } from "./components/context/auth.context.jsx";
-import { CartProvider } from "./components/context/CartProvider.jsx";
-import CartPage from "./pages/cart.jsx";
+import { CartProvider } from "@bibihero13/my-cart-lib";
+import { CartTable } from "@bibihero13/my-cart-lib";
 
 const router = createBrowserRouter([
   {
@@ -35,7 +35,7 @@ const router = createBrowserRouter([
         element: <LoginPage />,
       },
       { path: "products", element: <ProductList /> },
-      { path: "cart", element: <CartPage /> },
+      { path: "cart", element: <CartTable /> },
     ],
   },
 ]);

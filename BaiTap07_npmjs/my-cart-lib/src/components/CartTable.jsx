@@ -8,14 +8,31 @@ import {
   Popconfirm,
   Empty,
 } from "antd";
-import { useCart } from "../components/context/useCart";
+import { useCart } from "../context/useCart";
 
 const { Title } = Typography;
 
-const CartPage = () => {
+const CartTable = () => {
   const { items, updateItem, removeItem, clearCart } = useCart();
 
   const columns = [
+    {
+      title: "Ảnh",
+      dataIndex: "imageUrl",
+      key: "imageUrl",
+      render: (url) => (
+        <img
+          src={url}
+          alt="product"
+          style={{
+            width: "60px",
+            height: "60px",
+            objectFit: "cover",
+            borderRadius: "8px",
+          }}
+        />
+      ),
+    },
     {
       title: "Sản phẩm",
       dataIndex: "name",
@@ -43,7 +60,7 @@ const CartPage = () => {
       title: "Thành tiền",
       key: "total",
       render: (_, record) =>
-        `${(record.price * record.quantity).toLocaleString()} đ`,
+        `$${(record.price * record.quantity).toLocaleString()} `,
     },
     {
       title: "Hành động",
@@ -83,7 +100,7 @@ const CartPage = () => {
             <Button danger onClick={clearCart}>
               Xóa giỏ hàng
             </Button>
-            <Title level={4}>Tổng cộng: {total.toLocaleString()} đ</Title>
+            <Title level={4}>Tổng cộng: ${total.toLocaleString()} </Title>
             <Button type="primary" size="large">
               Thanh toán
             </Button>
@@ -93,5 +110,4 @@ const CartPage = () => {
     </div>
   );
 };
-
-export default CartPage;
+export default CartTable;

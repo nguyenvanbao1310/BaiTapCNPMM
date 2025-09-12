@@ -11,7 +11,7 @@ import {
   Slider,
 } from "antd";
 import axios from "axios";
-import { useCart } from "../components/context/useCart";
+import { useCart } from "@bibihero13/my-cart-lib";
 
 const { Option } = Select;
 const { Search } = Input;
