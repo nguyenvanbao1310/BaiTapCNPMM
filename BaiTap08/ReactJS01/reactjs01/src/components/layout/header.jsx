@@ -26,6 +26,11 @@ const Header = () => {
       icon: <SettingOutlined />,
     },
     {
+      label: <Link to="/viewed">Viewed</Link>,
+      key: "viewed",
+      icon: <SettingOutlined />,
+    },
+    {
       label: <Link to="/cart">Cart</Link>, // 👈 thêm tab giỏ hàng
       key: "cart",
       icon: <ShoppingCartOutlined />,

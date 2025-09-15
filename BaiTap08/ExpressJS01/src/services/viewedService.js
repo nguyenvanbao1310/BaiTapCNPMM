@@ -9,6 +9,10 @@ class ViewedService {
   async getAllViews() {
     return await ViewedProduct.find().populate("productId userId");
   }
+
+  async getViewsByUser(userId) {
+    return await ViewedProduct.find({ userId }).populate("productId");
+  }
 }
 
 module.exports = new ViewedService();

@@ -19,11 +19,16 @@ const {
   getCategories,
 } = require("../controllers/categoryController");
 
-const { createView, getViews } = require("../controllers/viewController");
+const {
+  createView,
+  getViews,
+  getViewsByUser,
+} = require("../controllers/viewController");
 
 const {
   addFavourite,
   getFavourites,
+  getFavouritesByUser,
   removeFavourite,
 } = require("../controllers/favouriteController");
 
@@ -67,12 +72,13 @@ routerAPI.get("/products/search", searchProducts);
 /* VIEW */
 routerAPI.post("/views", createView);
 routerAPI.get("/views", getViews);
+routerAPI.get("/views/:userId", getViewsByUser);
 
 /* FAVOURITE */
 routerAPI.post("/favourites", addFavourite);
 routerAPI.get("/favourites", getFavourites);
-routerAPI.delete("/favourites/:id", removeFavourite);
-
+routerAPI.delete("/favourites/:userId/:productId", removeFavourite);
+routerAPI.get("/favourites/:userId", getFavouritesByUser);
 /* COMMENT */
 routerAPI.post("/comments", createComment);
 routerAPI.get("/comments", getComments);

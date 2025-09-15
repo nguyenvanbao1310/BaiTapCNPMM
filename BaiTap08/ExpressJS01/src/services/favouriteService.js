@@ -1,4 +1,5 @@
 const FavouriteProduct = require("../models/FavouriteProduct");
+const mongoose = require("mongoose");
 
 class FavouriteService {
   async addFavourite(data) {
@@ -6,7 +7,9 @@ class FavouriteService {
   }
 
   async getFavouritesByUser(userId) {
-    return await FavouriteProduct.find({ userId }).populate("productId");
+    return await FavouriteProduct.find({
+      userId: new mongoose.Types.ObjectId(userId),
+    }).populate("productId");
   }
 
   async getAllFavourites() {

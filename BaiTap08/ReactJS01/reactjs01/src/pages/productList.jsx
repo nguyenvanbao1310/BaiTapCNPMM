@@ -12,6 +12,7 @@ import {
 } from "antd";
 import axios from "axios";
 import { useCart } from "@bibihero13/my-cart-lib";
+import ProductCard from "../components/ProductCard";
 
 const { Option } = Select;
 const { Search } = Input;
@@ -26,10 +27,14 @@ export default function ProductList() {
   const [discount, setDiscount] = useState(0);
   const [views, setViews] = useState([0, 10000]);
 
+  const [favouriteIds, setFavouriteIds] = useState([]);
+
   const [page, setPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(false);
   const { addItem } = useCart();
+
+  const userId = localStorage.getItem("userId");
 
   const limit = 4;
 
@@ -71,6 +76,26 @@ export default function ProductList() {
     }
     setLoading(false);
   };
+
+  const fetchFavourites = async () => {
+    if (!userId) {
+      const favs = JSON.parse(localStorage.getItem("favourites") || "[]");
+      setFavouriteIds(favs);
+      return;
+    }
+    try {
+      const res = await axios.get(
+        `http://localhost:8080/v1/api/favourites/${userId}`
+      );
+      setFavouriteIds(res.data.map((f) => f.productId._id));
+    } catch (err) {
+      console.error("Error fetching favourites:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchFavourites();
+  }, [userId]);
 
   useEffect(() => {
     fetchCategories();
@@ -205,91 +230,13 @@ export default function ProductList() {
         <Row gutter={[16, 16]}>
           {products.map((p) => (
             <Col xs={24} sm={12} md={8} lg={6} key={p._id}>
-              <Card
-                hoverable
-                style={{
-                  borderRadius: "12px",
-                  overflow: "hidden",
-                  position: "relative",
-                  transition: "transform 0.2s, box-shadow 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-5px)";
-                  e.currentTarget.style.boxShadow =
-                    "0 8px 16px rgba(0,0,0,0.2)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "none";
-                }}
-                cover={
-                  <div style={{ position: "relative" }}>
-                    <img
-                      alt={p.name}
-                      src={p.imageUrl}
-                      style={{
-                        height: "180px",
-                        objectFit: "contain",
-                        width: "100%",
-                        background: "#f9f9f9",
-                      }}
-                    />
-                    {p.discount > 0 && (
-                      <div
-                        style={{
-                          position: "absolute",
-                          top: "10px",
-                          left: "10px",
-                          background: "#ff4d4f",
-                          color: "#fff",
-                          padding: "4px 8px",
-                          borderRadius: "6px",
-                          fontWeight: "bold",
-                          fontSize: "12px",
-                          boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-                        }}
-                      >
-                        -{p.discount}%
-                      </div>
-                    )}
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "10px",
-                        right: "10px",
-                        background: "#1890ff",
-                        color: "#fff",
-                        padding: "2px 6px",
-                        borderRadius: "6px",
-                        fontSize: "12px",
-                      }}
-                    >
-                      👁 {p.views}
-                    </div>
-                  </div>
-                }
-              >
-                <Card.Meta
-                  title={<b>{p.name}</b>}
-                  description={p.description || "description"}
-                />
-                <p
-                  style={{
-                    marginTop: "10px",
-                    fontWeight: "bold",
-                    color: "green",
-                    fontSize: "16px",
-                  }}
-                >
-                  ${p.price}
-                </p>
-                <p style={{ fontSize: "12px", color: "#888" }}>
-                  Còn lại: {p.quantity}
-                </p>
-                <Button type="primary" block onClick={() => addItem(p)}>
-                  Thêm vào giỏ
-                </Button>
-              </Card>
+              <ProductCard
+                product={p}
+                userId={userId}
+                addItem={addItem}
+                favouriteIds={favouriteIds}
+                setFavouriteIds={setFavouriteIds}
+              />
             </Col>
           ))}
         </Row>

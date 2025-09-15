@@ -29,4 +29,15 @@ async function getViews(req, res) {
   }
 }
 
-module.exports = { createView, getViews };
+async function getViewsByUser(req, res) {
+  try {
+    const { userId } = req.params;
+
+    const views = await viewService.getViewsByUser(userId);
+    res.json(views);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
+module.exports = { createView, getViews, getViewsByUser };

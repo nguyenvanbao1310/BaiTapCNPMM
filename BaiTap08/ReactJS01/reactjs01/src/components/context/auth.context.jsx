@@ -1,8 +1,9 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useContext } from "react";
 
 export const AuthContext = createContext({
   isAuthenticated: false,
   user: {
+    _id: null,
     email: "",
     name: "",
   },
@@ -13,6 +14,7 @@ export const AuthWrapper = (props) => {
   const [auth, setAuth] = useState({
     isAuthenticated: false,
     user: {
+      _id: null,
       email: "",
       name: "",
     },
@@ -33,3 +35,6 @@ export const AuthWrapper = (props) => {
     </AuthContext.Provider>
   );
 };
+
+// ✅ thêm hook này
+export const useAuth = () => useContext(AuthContext);

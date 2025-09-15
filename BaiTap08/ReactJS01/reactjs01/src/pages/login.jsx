@@ -15,6 +15,7 @@ const LoginPage = () => {
 
     if (res && res.EC === 0) {
       localStorage.setItem("access_token", res.access_token);
+      localStorage.setItem("userId", res.user?._id);
       notification.success({
         message: "LOGIN USER",
         description: "Success",
@@ -22,6 +23,7 @@ const LoginPage = () => {
       setAuth({
         isAuthenticated: true,
         user: {
+          _id: res.user?._id ?? null,
           email: res.user?.email ?? "",
           name: res.user?.name ?? "",
         },
