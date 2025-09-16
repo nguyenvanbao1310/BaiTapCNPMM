@@ -7,6 +7,7 @@ import LoginPage from "./pages/login.jsx";
 import ProductList from "./pages/productList.jsx";
 import ViewedProducts from "./pages/ViewedProduct.jsx";
 import { CartTable } from "@bibihero13/my-cart-lib";
+import ProductDetail from "./pages/ProductDetail.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
       { path: "products", element: <ProductList /> },
       { path: "cart", element: <CartTable /> },
       { path: "/viewed", element: <ViewedProducts /> },
+      { path: "/products/:id", element: <ProductDetail /> },
     ],
   },
 ]);

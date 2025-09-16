@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useContext } from "react";
 import { AuthContext } from "../components/context/auth.context";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductCard({
   product,
@@ -12,10 +13,15 @@ export default function ProductCard({
   setFavouriteIds,
 }) {
   const [isFavourite, setIsFavourite] = useState(false);
+  const navigate = useNavigate();
 
   const { auth } = useContext(AuthContext);
   useEffect(() => {
-    setIsFavourite(favouriteIds.includes(product._id));
+    if (Array.isArray(favouriteIds)) {
+      setIsFavourite(favouriteIds.includes(product._id));
+    } else {
+      setIsFavourite(false);
+    }
   }, [favouriteIds, product._id]);
 
   const toggleFavourite = async () => {
@@ -74,6 +80,7 @@ export default function ProductCard({
         localStorage.setItem("views", JSON.stringify(views));
       }
     }
+    navigate(`/products/${product._id}`);
   };
 
   return (
@@ -156,7 +163,10 @@ export default function ProductCard({
       <Button
         type="primary"
         block
-        onClick={() => addItem(product)}
+        onClick={(e) => {
+          e.stopPropagation();
+          addItem(product);
+        }}
         style={{ marginBottom: "8px" }}
       >
         Thêm vào giỏ
@@ -166,7 +176,10 @@ export default function ProductCard({
         type={isFavourite ? "primary" : "default"}
         danger={isFavourite}
         block
-        onClick={toggleFavourite}
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleFavourite();
+        }}
       >
         {isFavourite ? "❤️ Yêu thích" : "🤍 Yêu thích"}
       </Button>

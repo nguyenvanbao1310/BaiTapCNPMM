@@ -4,7 +4,6 @@ const Category = require("../models/Category");
 const esClient = require("../config/elasticsearch");
 const PRODUCT_INDEX = "products";
 
-
 // Tạo product mới (Mongo + index vào Elasticsearch)
 const createProduct = async (data) => {
   const {
@@ -174,8 +173,49 @@ const searchProducts = async (params) => {
   };
 };
 
+const getSimilarProducts = async (productId, limit = 6) => {
+  const product = await Product.findById(productId).lean();
+  if (!product) throw new Error("Product not found");
+
+  // Query MongoDB theo category & brand
+  const candidates = await Product.find({
+    _id: { $ne: product._id },
+    category: product.category,
+  }).lean();
+
+  function scoreCandidate(c) {
+    let score = 0;
+
+    if (c.brand && c.brand === product.brand) score += 2;
+    if (c.cpu && product.cpu && c.cpu === product.cpu) score += 1;
+    if (c.ram && product.ram && c.ram === product.ram) score += 1;
+    if (c.gpu && product.gpu && c.gpu === product.gpu) score += 1;
+
+    const priceDiff = Math.abs(c.price - product.price);
+    const priceScore = Math.max(0, 1 - priceDiff / (product.price + 1));
+    score += priceScore;
+
+    return score;
+  }
+
+  const scored = candidates
+    .map((c) => ({ ...c, _score: scoreCandidate(c) }))
+    .sort((a, b) => b._score - a._score)
+    .slice(0, limit);
+
+  return scored;
+};
+
+const getProductById = async (id) => {
+  const product = await Product.findById(id).populate("category");
+  if (!product) throw new Error("Product not found");
+  return product;
+};
+
 module.exports = {
   createProduct,
   getProducts,
   searchProducts,
+  getSimilarProducts,
+  getProductById,
 };

@@ -12,6 +12,9 @@ const {
   createProduct,
   getProducts,
   searchProducts,
+  getSimilarProducts,
+  getProductById,
+  getProductStats,
 } = require("../controllers/productController");
 
 const {
@@ -68,6 +71,9 @@ routerAPI.get("/categories", getCategories);
 routerAPI.post("/products", createProduct);
 routerAPI.get("/products", getProducts);
 routerAPI.get("/products/search", searchProducts);
+routerAPI.get("/products/:id/similar", getSimilarProducts);
+routerAPI.get("/products/:id/", getProductById);
+routerAPI.get("/products/:id/stats", getProductStats);
 
 /* VIEW */
 routerAPI.post("/views", createView);
